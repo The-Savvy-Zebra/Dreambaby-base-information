@@ -25,23 +25,25 @@ raw_data <-
   filter(!is.na(qty_closed_giftlist)) %>%
   mutate(shop = str_trim(str_remove(omschrijving,"DREAMBABY"),"both")) %>%
   
-  # Remove closed shops
-  left_join(shops_activity,by = join_by(shop)) %>%
-  filter(!(!actief|is.na(actief))) %>%
-  
   # Make the names readable
   rename(kostenplaats = kplt,
          winkel = omschrijving,
          region = regio) %>%
   
-  # Clean-up the rows (some shops are new)
+  # Clean-up the rows (some shops are new, some are closed)
   left_join(xref_shops,by = join_by(shop)) %>%
-  group_by(kostenplaats,winkel,region,date,shop=new_shop) %>%
+  filter(!is.na(new_shop)) %>%
+  
+  group_by(kostenplaats,region,date,shop=new_shop) %>%
   summarise(qty_closed_giftlist=sum(qty_closed_giftlist,na.rm=TRUE)) %>%
   ungroup() %>%
   
+  # Remove closed shops
+  left_join(shops_activity,by = join_by(shop)) %>%
+  filter(!(!actief|is.na(actief))) %>%
+  
   # put the columns in a logical order
-  select(date,kostenplaats, region,  winkel, shop , qty_closed_giftlist)
+  select(date,kostenplaats, region, shop , qty_closed_giftlist)
 
 raw_data
 
@@ -53,8 +55,15 @@ if(FALSE)
 {
   mdm <- 
     raw_data %>%
-    filter(shop=="NAMUR") %>%
-    arrange(date)
+    filter(str_detect(shop,"WATERLO")) %>%
+    select(shop) %>%
+    unique()
   
+  
+  raw_data %>%
+    filter(is.na(omschrijving))
+    select(shop,actief) %>%
+    unique()
+    
   
 }
