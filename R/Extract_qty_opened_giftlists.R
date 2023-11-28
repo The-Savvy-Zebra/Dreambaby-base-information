@@ -27,7 +27,7 @@ raw_data <-
   
   # Remove closed shops
   left_join(shops_activity,by = join_by(shop)) %>%
-  filter(actief|!is.na(actief)) %>%
+  filter(!(!actief|is.na(actief))) %>%
   
   # Make the names readable
   rename(kostenplaats = kplt,
@@ -35,7 +35,8 @@ raw_data <-
          region = regio) %>%
   
   # Clean-up the rows (some shops are new)
-  left_join(xref_shops,by = join_by(shop)) %>%
+  left_join(xref_shops,by = join_by(shop)) %>% 
+  
   group_by(kostenplaats,winkel,region,date,shop=new_shop) %>%
   summarise(qty_opened_giftlist=sum(qty_opened_giftlist,na.rm=TRUE)) %>%
   ungroup() %>%
