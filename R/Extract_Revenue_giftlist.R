@@ -28,7 +28,7 @@ raw_data <-
   
   # Remove closed shops
   left_join(shops_activity,by = join_by(shop)) %>%
-  filter(actief|!is.na(actief)) %>%
+  filter(!(!actief|is.na(actief))) %>%
   
   # Make the names readable
   rename(kostenplaats = kplt,
