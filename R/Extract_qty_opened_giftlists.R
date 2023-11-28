@@ -42,7 +42,7 @@ raw_data <-
   ungroup() %>%
   
   # put the columns in a logical order
-  select(date,kostenplaats, region,  winkel, shop , qty_opened_giftlist)
+  select(date,kostenplaats, region,  shop , qty_opened_giftlist)
 
 raw_data
 
