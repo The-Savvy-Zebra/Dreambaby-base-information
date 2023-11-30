@@ -19,11 +19,12 @@ raw_data <-
          shop=filiaalnaam_dt,
          shop_nr=filiaalnummer,
          revenue=som_prijs_verkocht_donatie_item) %>%
-  select(shop_nr,shop,gl_id,date_bl_opening,date_bl_closing, revenue)
+  select(shop_nr,shop,gl_id,date_bl_opening,date_bl_closing, revenue) %>%
+  mutate(shop = str_trim(str_remove(shop,"DREAMBABY"),"both"))
 raw_data
 
 # Save data to feather
-write_feather(raw_data,"revenue_giftlist_by_shop.feather")
+write_feather(raw_data,"../Feather Files/revenue_giftlist_by_shop.feather")
 
 # Debug
 if(FALSE)
