@@ -13,8 +13,8 @@ raw_data <-
             detectDates = TRUE) %>%
   as_tibble() %>%
   clean_names() %>%
-  mutate(date_bl_opening = ymd(paste0(jaarmaand_sluiting_geschenklijst,"01"))) %>%
-  rename(date_bl_closing = datum_creatie_geschenklijst,
+  mutate(date_bl_closing = ymd(paste0(jaarmaand_sluiting_geschenklijst,"01"))) %>%
+  rename(date_bl_opening = datum_creatie_geschenklijst,
          gl_id=geschenklijst_nummer,
          shop=filiaalnaam_dt,
          shop_nr=filiaalnummer,
@@ -25,6 +25,7 @@ raw_data
 
 # Save data to feather
 write_feather(raw_data,"../Feather Files/revenue_giftlist_by_shop.feather")
+print("File wrote to the feather file directory.")
 
 # Debug
 if(FALSE)
