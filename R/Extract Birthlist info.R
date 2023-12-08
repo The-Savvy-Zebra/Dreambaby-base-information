@@ -42,12 +42,13 @@ opening_data <-
   select(shop_nr=filiaalnummer,
          date_bl_opening_2=datum_creatie_geschenklijst,
          date_bl_closing_2=datum_sluiting,
-         gl_id=geschenklijst_nummer)
+         gl_id=geschenklijst_nummer,
+         revenue_2=som_prijs_verkocht_donatie_item)
 opening_data
 
 # Join Both data sets
 df_intermediate <- 
-  left_join(opening_data,closing_data,by = join_by(shop_nr, gl_id)) 
+  full_join(opening_data,closing_data,by = join_by(shop_nr, gl_id)) 
 
 
 # Test for errors
@@ -71,7 +72,7 @@ df <-
   # Clean-up the rows (some shops are new, some are closed)
   left_join(xref_shops, by = join_by(shop_nr,shop)) %>%
   mutate(shop_nr=ifelse(!is.na(new_shop_nr),new_shop_nr,shop_nr)) %>%
-  select(shop_nr,gl_id,date_bl_opening,date_bl_closing,revenue) %>%
+  select(shop_nr,gl_id,date_bl_opening,date_bl_closing,revenue,revenue_2) %>%
   # left_join(clean_up
   #           , by = join_by(shop_nr)) %>%
   left_join(xref_shops %>%
@@ -82,13 +83,16 @@ df <-
   # Remove all closed shops
   filter(shop_open) %>%
   
+  # Add the revenue of the gl not closed yet
+  mutate(revenue = ifelse(is.na(revenue),revenue_2,revenue)) %>%
+  
   select(shop_nr=new_shop_nr,
          shop=new_shop,
          gl_id,
          date_bl_opening,
          date_bl_closing,
-         revenue) 
-
+         revenue) %>%
+  arrange(date_bl_opening) 
 
 # Save data to feather
 write_feather(df,"../Feather Files/revenue_giftlist_by_shop_open_closed.feather")
@@ -97,23 +101,11 @@ print("File wrote to the feather file directory.")
 # Debug
 if(FALSE)
 {
-  mdm <- 
-    df %>%
-    filter(is.na(shop)) %>%
-    select(shop_nr) %>%
-    unique() %>%
-    left_join(xref_shops,by = join_by(shop_nr))
-  
-  
-  mdm <- 
-    xref_shops %>%
-    select(shop_nr,shop,new_shop_nr) %>%
-    unique() %>%
-    arrange(shop_nr)
-  
-print(clean_up,n=nrow(clean_up))
 
-df  %>%
-  filter(gl_id==1270003)
+  mdm <-
+    df %>%
+    filter(year(date_bl_closing)==9999)
+  
+  
   
 }

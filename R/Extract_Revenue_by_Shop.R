@@ -7,6 +7,12 @@ sheet_name = "Omzet OPER"
 sheet_nr <- which(getSheetNames(file_name) ==
                     sheet_name)
 
+
+xref_subset <-
+  xref_shops %>%
+  select(shop,new_shop) %>%
+  unique()
+
 last_column = 143 # Oct 2023
 
 raw_data <-
@@ -14,7 +20,9 @@ raw_data <-
             sheet = sheet_nr,
             detectDates = TRUE,
             startRow = 2,
-            cols = 1:(last_column+1)) %>%
+            cols = 1:(last_column+1),
+            rows = 2:39
+            ) %>%
   as_tibble() %>%
   pivot_longer(cols = 4:last_column,names_to = "date", values_to = "revenue") %>%
   
@@ -26,7 +34,7 @@ raw_data <-
   
   # Remove closed shops
   left_join(shops_activity,by = join_by(shop)) %>%
-  filter(actief|!is.na(actief)) %>%
+  filter(!(!actief|is.na(actief))) %>%
   
   # Make the names readable
   rename(kostenplaats = kplt,
@@ -34,7 +42,7 @@ raw_data <-
          region = regio) %>%
   
   # Clean-up the rows (some shops are new)
-  left_join(xref_shops,by = join_by(shop)) %>%
+  left_join(xref_subset,by = join_by(shop)) %>%
   group_by(kostenplaats,winkel,region,date,shop=new_shop) %>%
   summarise(revenue=sum(revenue,na.rm=TRUE)) %>%
   ungroup() %>%
@@ -45,7 +53,19 @@ raw_data <-
 raw_data
 
 # Save data to feather
-write_feather(raw_data,"revenue_by_shop.feather")
+write_feather(raw_data,"../Feather Files/revenue_by_shop.feather")
 
-
+### Debug
+if(FALSE)
+{
+  raw_data %>%
+    select(shop,new_shop) %>%
+    unique() %>%
+    filter(is.na(new_shop))
+  
+  raw_data %>%
+    filter(shop=="HUY")
+    
+  
+}
 
