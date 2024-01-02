@@ -69,7 +69,22 @@ df <-
   select(-first_two_numbers,-first_number) %>%
   
   # Remove doubles
-  filter(!str_detect(gemeentenaam,"Brussel"))
+  filter(!str_detect(gemeentenaam,"Brussel")) %>%
+  
+  # Clean some names to remain consequent
+  rename(municipality_nl = gemeentenaam,
+         municipality_fr = nom_commune,
+         zipcode = postal_code,
+         district_nl=arrondissement_nl,
+         district_fr=arrondissement_fr,
+         district_nis=code_nis_arrondissement,
+         province_nis=code_nis_provincie,
+         province_nl= provincie,
+         province_fr=province,
+         municipality_nis=code_nis) %>%
+  mutate(municipality_nis=as.integer(municipality_nis),
+         district_nis=as.integer(district_nis),
+         province_nis=as.integer(province_nis))
 
 # Save data to feather
 write_feather(df,"../Feather Files/gemeente_arrondissment_provincie.feather")

@@ -152,6 +152,13 @@ for(i in 1:NROW(sheetnames)) {
 
 }
 
+
+# Clean-up the names
+overview_pop <-
+  overview_pop %>%
+  rename(age=leeftijd,
+         amount=values) 
+
 # Save data to feather
 write_feather(overview_pop,"../Feather Files/Birth Rates.feather")
 
