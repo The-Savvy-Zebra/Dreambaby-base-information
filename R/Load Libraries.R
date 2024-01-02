@@ -25,5 +25,6 @@ library(treemapify)
 library(ggpubr)
 library(data.table)
 library(tictoc)
+library(qdapRegex)
 
 dplyr.summarise.inform = FALSE

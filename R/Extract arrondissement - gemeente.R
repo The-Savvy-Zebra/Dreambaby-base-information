@@ -1,9 +1,8 @@
 source("R/Load Libraries.R")
 source("R/References.R")
 
+
 # load postal code xref
-
-
 file_name <- "Data/Conversion Postal code_Refnis code_va01012019.xlsx"
 sheet_name = "Blad1"
 
@@ -67,9 +66,29 @@ gemeente <-
 df <- 
   left_join(gemeente,arrondissement,by = join_by(first_two_numbers)) %>%
   left_join(xref_provincie,by = join_by(first_two_numbers)) %>%
-  select(-first_two_numbers,-first_number)
+  select(-first_two_numbers,-first_number) %>%
+  
+  # Remove doubles
+  filter(!str_detect(gemeentenaam,"Brussel"))
 
 # Save data to feather
 write_feather(df,"../Feather Files/gemeente_arrondissment_provincie.feather")
-print("File wrote to the feather file directory.")
 
+
+####
+## DEBUG
+if(FALSE) {
+  
+  mdm <-
+    gemeente %>%
+    select(postal_code,gemeentenaam) %>%
+    group_by(gemeentenaam) %>%
+    mutate(n=n()) %>%
+    ungroup() %>%
+    filter(n>1)
+  
+  
+  df %>%
+    filter(postal_code == 1050)
+  
+}

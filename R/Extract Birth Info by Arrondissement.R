@@ -29,4 +29,3 @@ df <-
 
 # Save data to feather
 write_feather(df,"../Feather Files/birth_by_arrondissment.feather")
-print("File wrote to the feather file directory.")

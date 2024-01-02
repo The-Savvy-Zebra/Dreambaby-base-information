@@ -48,7 +48,7 @@ raw_data <-
 raw_data
 
 # Save data to feather
-write_feather(raw_data,"qty_closed_giftlist_by_shop.feather")
+write_feather(raw_data,"../Feather Files/qty_closed_giftlist_by_shop.feather")
 
 # Debug
 if(FALSE)
