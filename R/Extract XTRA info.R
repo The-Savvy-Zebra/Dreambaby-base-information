@@ -53,8 +53,16 @@ if(FALSE)
 
   mdm <-
     xtra_raw_data %>%
-    select(cbh_id, zipcode) %>%
-    filter(is.na(zipcode))
+    select(sales_date,cbh_id, zipcode) %>%
+    filter(is.na(zipcode)) %>%
+    filter(!is.na(cbh_id)) %>%
+    select(-zipcode) %>%
+    group_by(cbh_id) %>%
+    mutate(first = min(sales_date)==sales_date) %>%
+    ungroup() %>% 
+    filter(first) %>%
+    select(-first) %>%
+    unique()
   
   
   cbh_id_raw_data %>%
