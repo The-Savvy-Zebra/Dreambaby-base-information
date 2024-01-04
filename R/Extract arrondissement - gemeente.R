@@ -94,16 +94,7 @@ write_feather(df,"../Feather Files/gemeente_arrondissment_provincie.feather")
 ## DEBUG
 if(FALSE) {
   
-  mdm <-
-    gemeente %>%
-    select(postal_code,gemeentenaam) %>%
-    group_by(gemeentenaam) %>%
-    mutate(n=n()) %>%
-    ungroup() %>%
-    filter(n>1)
-  
-  
-  df %>%
-    filter(postal_code == 1050)
+ df %>%
+    filter(str_detect(municipality_nl,"Aalst"))
   
 }
