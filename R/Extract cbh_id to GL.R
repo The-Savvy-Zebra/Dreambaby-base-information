@@ -18,10 +18,14 @@ cbh_id_raw_data <-
   # select(-som_prijs_verkocht_donatie_item2) %>%
   filter(buyer_cbh_id!="!") %>%
   filter(buyer_cbh_id!="?") %>%
+  filter(owner_cbh_id!="!") %>%
+  filter(owner_cbh_id!="?") %>%
   mutate(value=str_remove(value,",")) %>%
   mutate(value=as.numeric(value)) %>%
+  filter(!is.na(value)) %>%
   mutate(buyer_cbh_id = as.integer(buyer_cbh_id)) %>%
-  filter(!is.na(value))
+  mutate(owner_cbh_id = as.integer(owner_cbh_id)) 
+  
 
 
 
@@ -34,7 +38,7 @@ write_feather(cbh_id_raw_data,"../Feather Files/cbh_id_owners_buyers.feather")
 if(FALSE) {
   
   cbh_id_raw_data %>%
-    filter(is.na(value))
+    filter(is.na(owner_cbh_id2))
 
 }
 

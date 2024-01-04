@@ -88,15 +88,15 @@ df <-
   
   select(shop_nr=new_shop_nr,
          shop=new_shop,
-         gl_id,
-         date_bl_opening,
-         date_bl_closing,
+         gl_number=gl_id,
+         date_gl_opening=date_bl_opening,
+         date_gl_closing=date_bl_closing,
          revenue) %>%
-  arrange(date_bl_opening) 
+  arrange(date_gl_opening) 
 
 # Save data to feather
 write_feather(df,"../Feather Files/revenue_giftlist_by_shop_open_closed.feather")
-print("File wrote to the feather file directory.")
+print("File written to the feather file directory.")
 
 # Debug
 if(FALSE)

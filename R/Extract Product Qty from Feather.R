@@ -127,5 +127,27 @@ for(i in 1:NROW(shop_file_names)) {
 }
 
 
+# Clean-up class of the columns
+startTextInBlue(paste0("Cleaning-up the data structure"))
+
+product_inventory <-
+  product_inventory %>%
+  mutate(date = as.Date(date),
+         qty = as.integer(qty),
+         value = as.numeric(value)) %>%
+  rename(product_id = product_nr)
+
+stopTextIngreen(paste0("Cleaning-up the data structure"))
+
 # Save data to feather
 write_feather(product_inventory,"../Feather Files/product_inventory.feather")
+
+
+# Debug
+if(FALSE) {
+  
+  df <- 
+    read_feather("../Feather Files/product_inventory.feather")
+  
+}
+
