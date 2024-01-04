@@ -23,9 +23,12 @@ df <-
   clean_names() %>%
   pivot_longer(cols= 2:49,names_to = "date", values_to = "births") %>%
   mutate(date=dmy(paste0("1_",date))) %>%
-  rename(arrondissement_nl=x1) %>%
-  filter(str_detect(arrondissement_nl,"Arrondissement"))
+  rename(district_nl=x1) %>%
+  filter(str_detect(district_nl,"Arrondissement")) %>%
+
+  # Put the columns in the prefered order
+  select(date,district_nl,births) 
 
 
 # Save data to feather
-write_feather(df,"../Feather Files/birth_by_arrondissment.feather")
+write_feather(df,"../Feather Files/Birth by district.feather")
