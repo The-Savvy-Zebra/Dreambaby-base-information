@@ -173,8 +173,21 @@ estimate_pop_next_year <-
 
 # Merge the actual info and the forecasted info together
 overview_pop_final <-
-  rbind(overview_pop_actual,estimate_pop_next_year)
+  rbind(overview_pop_actual,estimate_pop_next_year) %>%
+  mutate(location=str_trim(str_replace(location, "\\(.*","")),"both")
 
 # Save data to feather
 write_feather(overview_pop_final,"../Feather Files/Population Distribution.feather")
+
+#### DEBUG
+if(FALSE) {
+  
+  overview_pop_final %>%
+    filter(str_detect(location,"AALST")) %>%
+    select(location) %>%
+    unique()
+  
+  
+  
+}
 
