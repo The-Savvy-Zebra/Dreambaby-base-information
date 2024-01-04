@@ -68,9 +68,6 @@ df <-
   left_join(xref_provincie,by = join_by(first_two_numbers)) %>%
   select(-first_two_numbers,-first_number) %>%
   
-  # Remove doubles
-  filter(!str_detect(gemeentenaam,"Brussel")) %>%
-  
   # Clean some names to remain consequent
   rename(municipality_nl = gemeentenaam,
          municipality_fr = nom_commune,
@@ -84,7 +81,10 @@ df <-
          municipality_nis=code_nis) %>%
   mutate(municipality_nis=as.integer(municipality_nis),
          district_nis=as.integer(district_nis),
-         province_nis=as.integer(province_nis))
+         province_nis=as.integer(province_nis)) %>%
+  mutate(municipality_nl = str_to_upper(iconv(municipality_nl,to='ASCII//TRANSLIT'))) %>%
+  mutate(municipality_fr = str_to_upper(iconv(municipality_fr,to='ASCII//TRANSLIT')))
+
 
 # Save data to feather
 write_feather(df,"../Feather Files/gemeente_arrondissment_provincie.feather")
@@ -94,7 +94,6 @@ write_feather(df,"../Feather Files/gemeente_arrondissment_provincie.feather")
 ## DEBUG
 if(FALSE) {
   
- df %>%
-    filter(str_detect(municipality_nl,"Aalst"))
+  mutate(location = str_to_upper(iconv(location,to='ASCII//TRANSLIT')))
   
 }
