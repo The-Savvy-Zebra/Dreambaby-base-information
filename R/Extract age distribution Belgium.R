@@ -154,11 +154,27 @@ for(i in 1:NROW(sheetnames)) {
 
 
 # Clean-up the names
-overview_pop <-
+overview_pop_actual <-
   overview_pop %>%
   rename(age=leeftijd,
-         amount=values) 
+         amount=values) %>%
+  
+  # Remove all non-standard charaters to their asci counterpart
+  mutate(location = str_to_upper(iconv(location,to='ASCII//TRANSLIT'))) %>%
+  mutate(actual_fcst="actual",
+         year=as.numeric(year))
+
+# Add 2024 as an estimate
+estimate_pop_next_year <-
+  overview_pop_final %>%
+  filter(year==(year(today())-1)) %>%
+  mutate(year=as.numeric(year)+1,
+         actual_fcst = "fcst")
+
+# Merge the actual info and the forecasted info together
+overview_pop_final <-
+  rbind(overview_pop_actual,estimate_pop_next_year)
 
 # Save data to feather
-write_feather(overview_pop,"../Feather Files/Birth Rates.feather")
+write_feather(overview_pop_final,"../Feather Files/Population Distribution.feather")
 
