@@ -76,7 +76,7 @@ df <-
   # left_join(clean_up
   #           , by = join_by(shop_nr)) %>%
   left_join(xref_shops %>%
-              select(new_shop,shop_nr,new_shop_nr,shop_open) %>%
+              select(new_shop,shop_nr,new_shop_nr,shop_open, location, zipcode) %>%
               unique(),
                      by = join_by(shop_nr==shop_nr)) %>%
   
@@ -88,6 +88,8 @@ df <-
   
   select(shop_nr=new_shop_nr,
          shop=new_shop,
+         shop_location=location,
+         shop_zipcode=zipcode,
          gl_number=gl_id,
          date_gl_opening=date_bl_opening,
          date_gl_closing=date_bl_closing,
