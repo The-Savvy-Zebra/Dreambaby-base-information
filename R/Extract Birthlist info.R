@@ -92,7 +92,10 @@ df <-
          date_gl_opening=date_bl_opening,
          date_gl_closing=date_bl_closing,
          revenue) %>%
-  arrange(date_gl_opening) 
+  arrange(date_gl_opening) %>%
+  
+  # Clean up the types of data
+  mutate(gl_number = as.character(gl_number))
 
 # Save data to feather
 write_feather(df,"../Feather Files/revenue_giftlist_by_shop_open_closed.feather")
