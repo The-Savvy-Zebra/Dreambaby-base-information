@@ -72,7 +72,8 @@ FTE_interims <-
 
 stopTextInGreen("Extract Interim FTE's")
 
-# Compile the full dataframe
+# Compile the full dataframe and add the total FTE's
+# pro shop
 
 df <-
   rbind(FTE_fixed_employees,FTE_students) %>%
@@ -88,11 +89,16 @@ df <-
   # Clean-up the column names and create the final dataframe
   rename(sales_region=regio) %>%
   select(date,sales_region,shop,kind,amount) %>%
-  arrange(date) 
+  arrange(date) %>%
+  
+  # Remove the closed shops
+  left_join(shops_activity,by = join_by(shop)) %>%
+  filter(actief) %>%
+  select(-actief)
 
 # Safe to a feather file
 startTextInBlue("Save the file")
-write_feather(df,"../Feather Files/FTE_by_shop.feather")
+write_feather(df,"../Feather Files/FTE by shop.feather")
 stopTextInGreen("Save the file")
 
 
@@ -100,8 +106,7 @@ stopTextInGreen("Save the file")
 if(FALSE) {
   
   df %>%
-    filter(date==ymd("2019 04 01")) %>%
-    filter(shop=="NAMUR")
+    filter(is.na(actief))
   
 }
 
