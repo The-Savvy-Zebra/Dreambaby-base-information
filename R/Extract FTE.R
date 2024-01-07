@@ -91,6 +91,14 @@ df <-
   select(date,sales_region,shop,kind,amount) %>%
   arrange(date) %>%
   
+  
+  # Clean-up the rows (some shops are new)
+  left_join(xref_subset,by = join_by(shop)) %>%
+  group_by(date,sales_region,shop=new_shop,kind) %>%
+  summarise(amount=sum(amount,na.rm=TRUE)) %>%
+  ungroup() %>%
+  
+  
   # Remove the closed shops
   left_join(shops_activity,by = join_by(shop)) %>%
   filter(actief) %>%
@@ -106,7 +114,9 @@ stopTextInGreen("Save the file")
 if(FALSE) {
   
   df %>%
-    filter(is.na(actief))
+    filter(str_detect(shop,"WILRIJK")) %>%
+    filter(year(date)==2022) %>%
+    filter(month(date)==8)
   
 }
 
