@@ -6,7 +6,7 @@ source("R/References.R")
 # loc_xref <- read_feather("../Feather Files/gemeente_arrondissment_provincie.feather")
 # 
 
-file_name <- "Data/Stat_Month_Birth_NL_2020.xlsx"
+file_name <- "Data/Stat_Month_Birth_NL_2020_v2.xlsx"
 sheet_name = "2020"
 
 sheet_nr <- which(getSheetNames(file_name) ==
