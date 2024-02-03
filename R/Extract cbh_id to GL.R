@@ -24,7 +24,9 @@ cbh_id_raw_data <-
   mutate(value=as.numeric(value)) %>%
   filter(!is.na(value)) %>%
   mutate(buyer_cbh_id = as.integer(buyer_cbh_id)) %>%
-  mutate(owner_cbh_id = as.integer(owner_cbh_id)) 
+  mutate(owner_cbh_id = as.integer(owner_cbh_id)) %>%
+  mutate(date_creation_gl = dmy(date_creation_gl)) %>%
+  mutate(gl_number = as.integer(gl_number))
   
 
 
