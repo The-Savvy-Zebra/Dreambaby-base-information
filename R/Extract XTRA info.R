@@ -1,6 +1,10 @@
 source("R/Load Libraries.R")
 source("R/References.R")
 
+
+bd_raw <- 
+  read_feather("../Feather Files/cbh_id_birth_date.feather") 
+
 #### Extract the relationship between cbh_id and their postcode
 file_name <- "Data/cbh_id.csv"
 
@@ -37,10 +41,13 @@ xtra_raw_data <-
   rename(grossmargin=grossmargin_brutowinst,
          identifier=herekenning) %>%
   mutate(shop = str_trim(str_remove(shop,"DREAMBABY"),"both")) %>%
+  mutate(grossmargin = as.numeric(grossmargin),
+         turnover_costprice_excl_vat = as.numeric(turnover_costprice_excl_vat)) %>%
   
   # Add the zipcode that is associated with the cbh_id
   left_join(cbh_id_raw_data,by = join_by(cbh_id)) %>%
-  select(-producthierarchy)
+  select(-producthierarchy) %>%
+  left_join(bd_raw,by = join_by(cbh_id))
   
 
 
