@@ -24,7 +24,10 @@ df <-
   pivot_longer(cols= 2:49,names_to = "date", values_to = "births") %>%
   mutate(date=dmy(paste0("1_",date))) %>%
   rename(district_nl=x1) %>%
-  filter(str_detect(district_nl,"Arrondissement")) %>%
+  # mutate(district_nl = ifelse(district_nl=="Brussels Hoofdstedelijk Gewest",
+  #                             "Arrondissement Brussel",
+  #                             district_nl)) %>%
+  filter(str_detect(district_nl,("Arrondissement"))) %>%
 
   # Put the columns in the prefered order
   select(date,district_nl,births) 
@@ -32,3 +35,16 @@ df <-
 
 # Save data to feather
 write_feather(df,"../Feather Files/Birth by district.feather")
+
+
+####### DEBUG
+if(FALSE) {
+  
+  mdm <- 
+    df %>%
+    filter(year(date)==2023)
+  
+  sum(mdm$births)
+  
+}
+
